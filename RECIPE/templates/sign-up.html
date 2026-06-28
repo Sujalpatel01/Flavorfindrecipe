@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kocina | Sign Up</title>
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}" >
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Leckerli+One&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  <script src="{% static 'js/uikit.js' %}"></script>
+</head>
+
+<body>
+
+<div class="uk-grid-collapse" data-uk-grid>
+  <div class="uk-width-1-2@m uk-padding-large uk-flex uk-flex-middle uk-flex-center" data-uk-height-viewport>
+    <div class="uk-width-3-4@s">
+      <div class="uk-text-center uk-margin-bottom">
+        <a class="uk-logo uk-text-primary uk-text-bold" href="{% url 'index' %}">Kocina</a>
+      </div>
+      <div class="uk-text-center uk-margin-medium-bottom">
+        <h1 class="uk-h2 uk-letter-spacing-small">Create an Account</h1>
+      </div>
+
+      <!-- Messages alert block -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="uk-alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" data-uk-alert>
+            <a class="uk-alert-close" data-uk-close></a>
+            <p class="uk-text-center uk-margin-remove">{{ message }}</p>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div data-uk-grid class="uk-child-width-auto uk-grid-small uk-flex uk-flex-center uk-margin">
+        <div>
+          <a href="#" data-uk-icon="icon: facebook" class="uk-icon-button uk-icon-button-large facebook"></a>
+        </div>
+        <div>
+          <a href="#" data-uk-icon="icon: google-plus" class="uk-icon-button uk-icon-button-large google-plus"></a>
+        </div>
+        <div>
+          <a href="#" data-uk-icon="icon: linkedin" class="uk-icon-button uk-icon-button-large linkedin"></a>
+        </div>
+      </div>    
+      <div class="uk-text-center uk-margin">
+        <p class="uk-margin-remove">Or use your email for registration:</p>
+      </div>
+
+      <form class="uk-text-center" action="{% url 'sign_up' %}" method="post">
+        {% csrf_token %}
+        <div class="uk-width-1-1 uk-margin">
+          <label class="uk-form-label" for="username">Username</label>
+          <input id="username" name="username" class="uk-input uk-form-large uk-border-pill uk-text-center" type="text" placeholder="Choose a Username" required>
+        </div>
+        <div class="uk-width-1-1 uk-margin">
+          <label class="uk-form-label" for="email">Email</label>
+          <input id="email" name="email" class="uk-input uk-form-large uk-border-pill uk-text-center" type="email" placeholder="tom@company.com" required>
+        </div>
+        <div class="uk-width-1-1 uk-margin">
+          <label class="uk-form-label" for="password">Password</label>
+          <input id="password" name="password" class="uk-input uk-form-large uk-border-pill uk-text-center" type="password" placeholder="Min. 8 characters" required>
+        </div>
+        <div class="uk-width-1-1 uk-margin">
+          <label class="uk-form-label" for="confirm_password">Confirm Password</label>
+          <input id="confirm_password" name="confirm_password" class="uk-input uk-form-large uk-border-pill uk-text-center" type="password" placeholder="Confirm Password" required>
+        </div>
+        <div class="uk-width-1-1 uk-text-center">
+          <button class="uk-button uk-button-primary uk-button-large">Sign Up</button>
+        </div>
+        <div class="uk-width-1-1 uk-margin uk-text-center">
+          <p class="uk-text-small uk-margin-remove">By signing up you agree to our <a class="uk-link-border" href="#">terms</a> of service.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="uk-width-1-2@m uk-padding-large uk-flex uk-flex-middle uk-flex-center uk-light" data-uk-height-viewport>
+    <div class="uk-background-cover uk-background-norepeat uk-background-blend-overlay uk-background-overlay 
+      uk-border-rounded-large uk-width-1-1 uk-height-xlarge uk-flex uk-flex-middle uk-flex-center" 
+      style="background-image: url(https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=600&auto=format&fit=crop);">
+      <div class="uk-padding-large">
+        <div class="uk-text-center">
+          <h2 class="uk-letter-spacing-small">Welcome Back</h2>
+        </div>
+        <div class="uk-margin-top uk-margin-medium-bottom uk-text-center">
+          <p>Already signed up, enter your details and start cooking your first meal today</p>
+        </div>
+        <div class="uk-width-1-1 uk-text-center">
+          <a href="{% url 'sign_in' %}" class="uk-button uk-button-primary uk-button-large">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

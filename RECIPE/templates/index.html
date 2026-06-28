@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kocina | Explore Cooking Recipes{% endblock %}
+
+{% block content %}
+<div class="uk-container">
+  <div class="uk-border-rounded-large uk-background-top-center uk-background-cover 
+    uk-background-norepeat uk-light uk-inline uk-overflow-hidden uk-width-1-1" 
+    style="background-image: url({% static 'img/header.jpg' %});">
+    <div class="uk-position-cover uk-header-overlay"></div>
+    <div class="uk-position-relative" data-uk-grid>
+      <div class="uk-width-1-2@m uk-flex uk-flex-middle">
+        <div class="uk-padding-large uk-padding-remove-right">
+          <h1 class="uk-heading-small uk-margin-remove-top">Choose from thousands of recipes</h1>
+          <p class="uk-text-secondary">Explore healthy, delicious, and easy-to-cook recipes categorized by taste, ingredients, and cuisine.</p>
+          {% if not user.is_authenticated %}
+            <a class="uk-text-secondary uk-text-600 uk-text-small hvr-forward" href="{% url 'sign_up' %}">Sign up today<span
+              class="uk-margin-small-left" data-uk-icon="arrow-right"></span></a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="uk-width-expand@m">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="uk-section uk-section-default">
+  <div class="uk-container">
+    <div data-uk-grid>
+      <div class="uk-width-1-4@m sticky-container">
+        <div data-uk-sticky="offset: 100; bottom: true; media: @m;">
+          <h2>Recipes</h2>
+          <ul class="uk-nav-default uk-nav-parent-icon uk-nav-filter uk-margin-medium-top" data-uk-nav>
+            {% for category_name, tag_items in sidebar_categories.items %}
+              <li class="uk-parent {% if forloop.first %}uk-open{% endif %}">
+                <a href="#">{{ category_name }}</a>
+                <ul class="uk-nav-sub">
+                  {% for tag_key, tag_label in tag_items %}
+                    <li><a href="{% url 'search_recipes' %}?tag={{ tag_key }}">{{ tag_label }}</a></li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="uk-width-expand@m">
+        <div data-uk-grid>
+          <div class="uk-width-expand@m">
+            <form class="uk-search uk-search-default uk-width-1-1" action="{% url 'search_recipes' %}" method="get">
+              <span data-uk-search-icon></span>
+              <input class="uk-search-input uk-text-small uk-border-rounded uk-form-large" type="search" name="q" placeholder="Search for recipes...">
+            </form>          
+          </div>
+          <div class="uk-width-1-3@m uk-text-right@m uk-light">
+            <select class="uk-select uk-select-light uk-width-auto uk-border-pill uk-select-primary" onchange="location = this.value;">
+              <option value="?sort=Latest" {% if selected_sort == 'Latest' %}selected{% endif %}>Sort by: Latest</option>
+              <option value="?sort=Top Rated" {% if selected_sort == 'Top Rated' %}selected{% endif %}>Sort by: Top Rated</option>
+              <option value="?sort=Trending" {% if selected_sort == 'Trending' %}selected{% endif %}>Sort by: Trending</option>
+            </select>
+          </div>
+        </div>      
+        <div class="uk-child-width-1-2 uk-child-width-1-3@s" data-uk-grid>
+          {% for recipe in page_obj %}
+            <div>
+              <div class="uk-card">
+                <div class="uk-card-media-top uk-inline uk-light">
+                  <img class="uk-border-rounded-medium" src="{{ recipe.image }}" alt="{{ recipe.name }}" style="width: 300px; height: 160px; object-fit: cover;">
+                  <div class="uk-position-cover uk-card-overlay uk-border-rounded-medium"></div>
+                  <div class="uk-position-xsmall uk-position-top-right">
+                    <a href="#" class="uk-icon-button uk-like uk-position-z-index uk-position-relative"
+                      data-uk-icon="heart"></a>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="uk-card-title uk-text-500 uk-margin-small-bottom uk-margin-top">{{ recipe.name }}</h3>
+                  <div class="uk-text-xsmall uk-text-muted" data-uk-grid>
+                    <div class="uk-width-auto uk-flex uk-flex-middle">
+                      <span class="uk-rating-filled" data-uk-icon="icon: star; ratio: 0.7"></span>
+                      <span class="uk-margin-xsmall-left">{{ recipe.rating }}</span>
+                      <span>({{ recipe.reviewCount }})</span>
+                    </div>
+                    <div class="uk-width-expand uk-text-right">Cuisine: {{ recipe.cuisine }}</div>
+                  </div>
+                </div>
+                <a href="{% url 'recipe_detail' recipe.id %}" class="uk-position-cover"></a>
+              </div>
+            </div>
+          {% empty %}
+            <div class="uk-width-1-1 uk-text-center uk-margin-large-top">
+              <p class="uk-text-lead uk-text-muted">No recipes found.</p>
+            </div>
+          {% endfor %}
+        </div>
+        
+        {% if page_obj.has_other_pages %}
+          <div class="uk-margin-large-top uk-text-small">
+            <ul class="uk-pagination uk-flex-center uk-text-500 uk-margin-remove" data-uk-margin>
+              {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}&sort={{ selected_sort }}"><span data-uk-pagination-previous></span></a></li>
+              {% endif %}
+              
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <li class="uk-active"><span>{{ num }}</span></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <li><a href="?page={{ num }}&sort={{ selected_sort }}">{{ num }}</a></li>
+                {% endif %}
+              {% endfor %}
+              
+              {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}&sort={{ selected_sort }}"><span data-uk-pagination-next></span></a></li>
+              {% endif %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

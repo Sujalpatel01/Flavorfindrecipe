@@ -1,0 +1,39 @@
+<nav class="uk-navbar-container uk-letter-spacing-small">
+  <div class="uk-container">
+    <div class="uk-position-z-index" data-uk-navbar>
+      <div class="uk-navbar-left">
+        <a class="uk-navbar-item uk-logo" href="{% url 'index' %}">Kocina</a>
+        <ul class="uk-navbar-nav uk-visible@m uk-margin-large-left">
+          <li class="{% if request.resolver_match.url_name == 'index' %}uk-active{% endif %}"><a href="{% url 'index' %}">Home</a></li>
+          <li class="{% if request.resolver_match.url_name == 'search_recipes' %}uk-active{% endif %}"><a href="{% url 'search_recipes' %}">Search</a></li>
+          <li class="{% if request.resolver_match.url_name == 'contact' %}uk-active{% endif %}"><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+      </div>
+      <div class="uk-navbar-right">
+        <div>
+          <a class="uk-navbar-toggle" data-uk-search-icon href="#"></a>
+          <div class="uk-drop uk-background-default" data-uk-drop="mode: click; pos: left-center; offset: 0">
+            <form class="uk-search uk-search-navbar uk-width-1-1" action="{% url 'search_recipes' %}" method="get">
+              <input class="uk-search-input uk-text-demi-bold" type="search" name="q" placeholder="Search for recipes..." autofocus>
+            </form>
+          </div>
+        </div>
+        <ul class="uk-navbar-nav uk-visible@m">
+          {% if user.is_authenticated %}
+            <li><span class="uk-navbar-item uk-text-muted uk-text-small">Hello, <strong>{{ user.username }}</strong></span></li>
+            <li><a href="{% url 'sign_out' %}">Sign Out</a></li>
+          {% else %}
+            <li class="{% if request.resolver_match.url_name == 'sign_in' %}uk-active{% endif %}"><a href="{% url 'sign_in' %}">Sign In</a></li>
+          {% endif %}
+        </ul>
+        {% if not user.is_authenticated %}
+          <div class="uk-navbar-item">
+            <div><a class="uk-button uk-button-primary" href="{% url 'sign_up' %}">Sign Up</a></div>
+          </div>
+        {% endif %}          
+        <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+          data-uk-navbar-toggle-icon></span></a>
+      </div>
+    </div>
+  </div>
+</nav>
